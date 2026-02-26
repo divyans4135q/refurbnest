@@ -15,3 +15,5 @@ yarn-error.log*
 # System files
 .antigravity/
 .gemini/
+backend/mongodb_data/
+*.lock
