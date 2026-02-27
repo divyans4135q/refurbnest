@@ -4,6 +4,8 @@ import Navbar from './components/common/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 import Footer from './components/common/Footer';
+import { motion } from 'framer-motion';
+import { TOKENS } from './config/tokens';
 
 // Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home'));
@@ -16,45 +18,7 @@ const OrderDetails = lazy(() => import('./pages/OrderDetails'));
 const EMI = lazy(() => import('./pages/EMI'));
 const Login = lazy(() => import('./pages/Login'));
 const Admin = lazy(() => import('./pages/Admin'));
-
-// Simple placeholder pages for now
-const About = () => (
-  <div className="about-page" style={{ paddingTop: '100px', background: '#f8fafc' }}>
-    <section className="section" style={{ padding: '6rem 5%', textAlign: 'center' }}>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <span style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>Our Mission</span>
-        <h1 style={{ fontSize: '4rem', fontWeight: 900, marginTop: '1rem', color: 'var(--dark)' }}>Giving Gadgets <br /><span style={{ color: 'var(--primary)' }}>A Second Life.</span></h1>
-        <p style={{ maxWidth: '800px', margin: '2rem auto', fontSize: '1.25rem', color: '#64748b', lineHeight: 1.8 }}>
-          RefurbNest was born from a simple idea: premium tech shouldn't cost the earth. We're on a mission to reduce e-waste while making flagship gadgets accessible to everyone through our rigorous 49-point certification process.
-        </p>
-      </motion.div>
-    </section>
-
-    <section className="section" style={{ background: 'white', padding: '8rem 5%' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
-        <AboutCard
-          title="Certified Quality"
-          desc="Every device undergoes a 49-point diagnostic test by our expert engineers."
-        />
-        <AboutCard
-          title="Eco Friendly"
-          desc="By choosing refurbished, you save up to 80% of the carbon footprint of a new device."
-        />
-        <AboutCard
-          title="6-Month Warranty"
-          desc="We stand by our work. Every purchase includes a comprehensive doorstep warranty."
-        />
-      </div>
-    </section>
-  </div>
-);
-
-const AboutCard = ({ title, desc }) => (
-  <div style={{ padding: '3rem', borderRadius: '32px', background: '#f1f5f9', transition: '0.3s' }}>
-    <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem' }}>{title}</h3>
-    <p style={{ color: '#64748b', fontSize: '1.1rem', lineHeight: 1.6 }}>{desc}</p>
-  </div>
-);
+const About = lazy(() => import('./pages/About'));
 
 const PageLoader = () => (
   <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
@@ -62,12 +26,36 @@ const PageLoader = () => (
   </div>
 );
 
+const PromoBanner = () => {
+  if (!TOKENS.SHOW_PROMO_BANNER) return null;
+
+  return (
+    <motion.div
+      initial={{ y: -50 }}
+      animate={{ y: 0 }}
+      style={{
+        background: 'var(--primary-dark)',
+        color: 'white',
+        padding: '0.6rem',
+        textAlign: 'center',
+        fontSize: '0.85rem',
+        fontWeight: 700,
+        position: 'relative',
+        zIndex: 2000
+      }}
+    >
+      🎉 <span style={{ opacity: 0.8 }}>Special Launch:</span> Use code <span style={{ color: 'var(--secondary)', background: 'rgba(0,0,0,0.2)', padding: '2px 8px', borderRadius: '4px', margin: '0 5px' }}>NESTFIRST</span> for ₹2,000 off!
+    </motion.div>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
           <Toaster position="top-center" reverseOrder={false} />
+          <PromoBanner />
           <Navbar />
           <Suspense fallback={<PageLoader />}>
             <Routes>
